@@ -4,11 +4,13 @@ import re
 import os
 import sentry_sdk
 import json
+import dj_database_url
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.logging import LoggingIntegration
 
 from django.contrib.messages import constants as messages
+
 
 
 def get_bool(key, default):
@@ -19,6 +21,9 @@ def get_bool(key, default):
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(BASE_DIR, '..', '.env'))
 
 VERSION = os.environ.get('VERSION') or ''
 SYNDICATE = os.environ.get('SYNDICATE') or 'base'
@@ -38,6 +43,8 @@ SESSION_COOKIE_NAME = 'tsd_sessionid'
 DEBUG = get_bool('DEBUG', False)
 
 ALLOWED_HOSTS = ['*']
+
+SITE_ID = 1
 
 ## So that django will honor this header. Why is this not the default!
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -157,9 +164,11 @@ MESSAGE_TAGS = {
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+import dj_database_url
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600)
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"), conn_max_age=600)
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -497,6 +506,9 @@ CSRF_TRUSTED_ORIGINS = json.loads(os.environ.get('CSRF_TRUSTED_ORIGINS') or '[]'
 # https://docs.djangoproject.com/en/4.0/releases/3.2/#customizing-type-of-auto-created-primary-keys
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 SYNDICATES = {
   'base': {
     'display_name': 'Obico',
@@ -510,3 +522,4 @@ SYNDICATES = {
     'logo_full': '/static/jusprin/img/jusprin-svg-logo-full.png',
   },
 }
+

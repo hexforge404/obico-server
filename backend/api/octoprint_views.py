@@ -24,7 +24,8 @@ import logging
 from python_ipware import IpWare
 from ipware import get_client_ip
 from binascii import hexlify
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from .utils import report_validationerror
 from lib.printer_discovery import (
     pull_messages_for_device,
@@ -50,6 +51,10 @@ LOGGER = logging.getLogger(__name__)
 IMG_URL_TTL_SECONDS = 60 * 30
 ALERT_COOLDOWN_SECONDS = 90
 
+
+@api_view(['GET'])
+def ping(request):
+    return Response({"message": "pong"}, status=200)
 
 def send_failure_alert(printer: Printer, img_url, is_warning: bool, print_paused: bool) -> None:
     if not printer.current_print:

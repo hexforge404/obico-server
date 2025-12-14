@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from . import octoprint_views
 from . import viewsets
+from api.octoprint_views import ping
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -43,9 +44,9 @@ router.register(r'first_layer_inspection_images', viewsets.FirstLayerInspectionI
 router.register(r'octo/g_code_files', octoprint_views.GCodeFileView, 'AgentGCodeFile')
 
 urlpatterns = [
+    path('v1/octo/ping/', octoprint_views.ping, name='ping'),
     path('v1/', include(router.urls)),
     path('v1/octo/pic/', octoprint_views.OctoPrintPicView.as_view()),
-    path('v1/octo/ping/', octoprint_views.OctoPrinterView.as_view()),  # For compatibility with plugin < 1.5.0
     path('v1/octo/printer/', octoprint_views.OctoPrinterView.as_view()),
     path('v1/octo/unlinked/', octoprint_views.OctoPrinterDiscoveryView.as_view()),
     path('v1/octo/verify/',

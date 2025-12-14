@@ -42,7 +42,8 @@ from .serializers import (
     NotificationSettingSerializer, PrinterEventSerializer, GCodeFolderDeSerializer, GCodeFolderSerializer, FirstLayerInspectionImageSerializer
 )
 from lib.channels import send_status_to_web
-from lib import cache, gcode_metadata
+from lib import cache
+# from gcode_metadata
 from lib.view_helpers import get_printer_or_404
 from config.celery import celery_app
 from lib.file_storage import save_file_obj, delete_file
